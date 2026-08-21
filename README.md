@@ -5,3 +5,5 @@
 Aplikasi undangan digital berbasis Laravel.
 
 > Vercel deployment sync: runtime configuration updated for serverless deployment.
+
+<!-- VERCEL_GIT_SYNC_TEST -->
