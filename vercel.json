@@ -3,18 +3,18 @@
   "version": 2,
   "outputDirectory": "public",
   "functions": {
-    "api/index.php": {
+    "api/*.php": {
       "runtime": "vercel-php@0.7.4"
     }
   },
   "routes": [
     {
       "src": "/build/(.*)",
-      "dest": "/build/$1"
+      "dest": "/public/build/$1"
     },
     {
       "src": "/(favicon.ico|robots.txt)",
-      "dest": "/$1"
+      "dest": "/public/$1"
     },
     {
       "src": "/(.*)",
@@ -29,10 +29,11 @@
     "APP_PACKAGES_CACHE": "/tmp/packages.php",
     "APP_ROUTES_CACHE": "/tmp/routes.php",
     "APP_SERVICES_CACHE": "/tmp/services.php",
-    "VIEW_COMPILED_PATH": "/tmp",
+    "VIEW_COMPILED_PATH": "/tmp/views",
     "CACHE_STORE": "array",
     "SESSION_DRIVER": "array",
     "QUEUE_CONNECTION": "sync",
+    "LOG_CHANNEL": "stderr",
     "DB_CONNECTION": "sqlite",
     "DB_DATABASE": "/tmp/undangan.sqlite"
   }
