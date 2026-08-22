@@ -1,38 +1,29 @@
 <?php
 
-use Illuminate\Contracts\Console\Kernel as ConsoleKernel;
+use Illuminate\Http\Request;
 
-// Vercel's filesystem is ephemeral. Keep the SQLite database in /tmp and
-// initialize its schema on a cold start before Laravel handles the request.
-$dbPath = '/tmp/undangan.sqlite';
+// Vercel serverless entry point for Laravel.
+// Keep the handler minimal: Laravel boots the application and handles
+// the request using the standard Laravel front controller flow.
 
-putenv('DB_CONNECTION=sqlite');
-putenv('DB_DATABASE=' . $dbPath);
+putenv('APP_ENV=production');
+putenv('APP_DEBUG=false');
 putenv('SESSION_DRIVER=array');
 putenv('CACHE_STORE=array');
 putenv('QUEUE_CONNECTION=sync');
+putenv('DB_CONNECTION=sqlite');
+putenv('DB_DATABASE=/tmp/undangan.sqlite');
 
-$_ENV['DB_CONNECTION'] = 'sqlite';
-$_ENV['DB_DATABASE'] = $dbPath;
+$_ENV['APP_ENV'] = 'production';
+$_ENV['APP_DEBUG'] = 'false';
 $_ENV['SESSION_DRIVER'] = 'array';
 $_ENV['CACHE_STORE'] = 'array';
 $_ENV['QUEUE_CONNECTION'] = 'sync';
+$_ENV['DB_CONNECTION'] = 'sqlite';
+$_ENV['DB_DATABASE'] = '/tmp/undangan.sqlite';
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $app = require_once __DIR__ . '/../bootstrap/app.php';
 
-if (! file_exists($dbPath)) {
-    touch($dbPath);
-}
-
-try {
-    $app->make(ConsoleKernel::class)->call('migrate', [
-        '--force' => true,
-        '--no-interaction' => true,
-    ]);
-} catch (Throwable $e) {
-    error_log('Vercel SQLite migration failed: ' . $e->getMessage());
-}
-
-$app->handleRequest(\Illuminate\Http\Request::capture());
+$app->handleRequest(Request::capture());
